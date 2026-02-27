@@ -111,15 +111,16 @@ class MazeGenerator:
     # -----------------------------
     def _break_random_walls(self, extra_paths: int = None) -> None:
         """
-        Imperfect maze logic: break walls to create extra paths.
-        Guaranteed to create actual new connections.
+        Break random walls to create extra paths, but:
+        - corridors stay max 2 cells wide/height
+        - avoids merging too many open cells
         """
         if extra_paths is None:
             extra_paths = int((self.width * self.height) / 10)
 
         added = 0
         attempts = 0
-        max_attempts = extra_paths * 10  # safety to prevent infinite loop
+        max_attempts = extra_paths * 20
 
         while added < extra_paths and attempts < max_attempts:
             x = self.rng.randint(0, self.width - 1)
@@ -129,6 +130,7 @@ class MazeGenerator:
 
             for d in directions:
                 nx, ny = x + DX[d], y + DY[d]
+
                 if 0 <= nx < self.width and 0 <= ny < self.height:
                     # Skip blocked or entry/exit
                     if (x, y) in self.blocked or (nx, ny) in self.blocked:
@@ -137,6 +139,18 @@ class MazeGenerator:
                         continue
                     # Only break if wall exists
                     if self.grid[y][x] & d:
+                        # Check if breaking creates a 3x3 open area
+                        open_count = 0
+                        for dx in [-1, 0, 1]:
+                            for dy in [-1, 0, 1]:
+                                tx, ty = nx + dx, ny + dy
+                                if 0 <= tx < self.width and 0 <= ty < self.height:
+                                    if self.grid[ty][tx] != (N | E | S | W):
+                                        open_count += 1
+                        if open_count > 4:
+                            # Too many adjacent open cells → skip
+                            continue
+
                         self.remove_wall((x, y), (nx, ny))
                         added += 1
                         break

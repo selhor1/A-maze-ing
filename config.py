@@ -1,3 +1,4 @@
+
 from typing import Tuple, Dict, Optional
 from renderer import get_42_pattern_coords
 

@@ -4,4 +4,3 @@ ENTRY=0,0
 EXIT=6,6
 OUTPUT_FILE=file.txt
 PERFECT=False
-#SEED=42
