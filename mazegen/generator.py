@@ -109,32 +109,38 @@ class MazeGenerator:
                 stack.pop()
 
     # -----------------------------
-    def _break_random_walls(self) -> None:
+    def _break_random_walls(self, extra_paths: int = None) -> None:
         """
-        Imperfect maze logic (same idea as your friend's code).
-        Break ~10% of total cell walls randomly.
+        Imperfect maze logic: break walls to create extra paths.
+        Guaranteed to create actual new connections.
         """
-        extra_walls = int((self.width * self.height) / 10)
+        if extra_paths is None:
+            extra_paths = int((self.width * self.height) / 10)
 
-        for _ in range(extra_walls):
+        added = 0
+        attempts = 0
+        max_attempts = extra_paths * 10  # safety to prevent infinite loop
+
+        while added < extra_paths and attempts < max_attempts:
             x = self.rng.randint(0, self.width - 1)
             y = self.rng.randint(0, self.height - 1)
-
-            if (x, y) in self.blocked or (x, y) in [self.entry, self.exit]:
-                continue
-
             directions = [N, E, S, W]
-            d = self.rng.choice(directions)
+            self.rng.shuffle(directions)
 
-            nx, ny = x + DX[d], y + DY[d]
-
-            if 0 <= nx < self.width and 0 <= ny < self.height:
-                if (nx, ny) in self.blocked:
-                    continue
-
-                # Only break if wall exists
-                if self.grid[y][x] & d:
-                    self.remove_wall((x, y), (nx, ny))
+            for d in directions:
+                nx, ny = x + DX[d], y + DY[d]
+                if 0 <= nx < self.width and 0 <= ny < self.height:
+                    # Skip blocked or entry/exit
+                    if (x, y) in self.blocked or (nx, ny) in self.blocked:
+                        continue
+                    if (x, y) in [self.entry, self.exit] or (nx, ny) in [self.entry, self.exit]:
+                        continue
+                    # Only break if wall exists
+                    if self.grid[y][x] & d:
+                        self.remove_wall((x, y), (nx, ny))
+                        added += 1
+                        break
+            attempts += 1
 
     # -----------------------------
     def generate(self, perfect: bool = True) -> None:
@@ -153,7 +159,7 @@ class MazeGenerator:
         sx, sy = self.entry
         self._dfs_iterative(sx, sy)
 
-        # If imperfect → break random walls (friend logic)
+        # If imperfect → break random walls
         if not perfect:
             self._break_random_walls()
 
