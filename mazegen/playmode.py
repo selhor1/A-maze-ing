@@ -115,6 +115,6 @@ class PlayMode:
                 if not hearts:
                     print("\033[91mGame Over! You ran out of hearts.\033[0m")
                     break
-                
+
             if moved:
                 steps += 1
