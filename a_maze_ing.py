@@ -150,7 +150,7 @@ def main() -> None:
                         show_42=True,
                         path_cells=visible
                     )
-                    time.sleep(0.05)
+                    # time.sleep(0.05)
                 path_cells = set(cells)
             elif choice == "p":
                 PlayMode.play(

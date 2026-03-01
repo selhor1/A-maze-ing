@@ -1,6 +1,3 @@
-from renderer import PALETTES, get_42_pattern_coords, render_ascii
-import os
-import time
 from typing import Dict, List, Tuple
 
 
@@ -69,45 +66,3 @@ class Solver:
             y += dy
             cells.append((x, y))
         return cells
-
-    @staticmethod
-    def show_path(
-        grid: List[List[int]],
-        entry: Tuple[int, int],
-        exit_: Tuple[int, int],
-        path: List[int],
-        origin_theme: Dict[str, str],
-        animate: bool = True,
-    ) -> None:
-        """Show the solution path on your real maze with mouse animation"""
-        cells = Solver.path_to_cells(entry, path)
-        height = len(grid)
-        width = len(grid[0])
-        p42 = get_42_pattern_coords(width, height)
-        visited = set()
-
-        for px, py in cells:
-            visited.add((px, py))
-            os.system("cls" if os.name == "nt" else "clear")
-
-            # Create a temporary "grid" with dots for visited
-            temp_grid = []
-            for y in range(height):
-                row = []
-                for x in range(width):
-                    if (x, y) in visited and (x, y) not in p42:
-                        row.append("•")  # dot for visited
-                    else:
-                        row.append(None)  # leave as maze
-                temp_grid.append(row)
-
-            render_ascii(
-                grid,
-                entry=(px, py),  # current mouse pos
-                exit_=exit_,
-                origin_theme=origin_theme,
-                show_42=True,
-                visited=temp_grid,  # pass visited dots
-            )
-            if animate:
-                time.sleep(0.05)
