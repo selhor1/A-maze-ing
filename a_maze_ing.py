@@ -10,12 +10,10 @@ from renderer import render_ascii, PALETTES
 from mazegen.generator import N, E, S, W
 
 
-# ===== TERMINAL HELPERS =====
 def clear_screen() -> None:
     os.system("clear")
 
 
-# ===== GENERATE & RENDER =====
 def generate_and_render(config, pal_idx):
     seed_to_use = config.seed if config.seed is not None else random.randint(0, 999999) 
     generator = MazeGenerator(
@@ -44,26 +42,17 @@ def generate_and_render(config, pal_idx):
     grid = generator.get_cells()
     return generator, grid, seed_to_use
 
-# ===== SAVE MAZE TO FILE IN SUBJECT FORMAT =====
 def save_maze_to_file_hex(grid, config):
     """Save maze to file using hex digits, then entry, exit, shortest path."""
     lines = []
 
-    # 1️⃣ Maze cells, row by row
     for row in grid:
-        line = "".join(f"{cell:X}" for cell in row)  # hex, no spaces
+        line = "".join(f"{cell:X}" for cell in row)
         lines.append(line)
 
-    # 2️⃣ Empty line
     lines.append("")
-
-    # 3️⃣ Entry coordinates
     lines.append(f"{config.entry[0]} {config.entry[1]}")
-
-    # 4️⃣ Exit coordinates
     lines.append(f"{config.exit[0]} {config.exit[1]}")
-
-    # 5️⃣ Shortest path (convert integers to letters)
     path_dirs = Solver.solve_bfs(
         grid=grid,
         entry=config.entry,
@@ -72,20 +61,17 @@ def save_maze_to_file_hex(grid, config):
     dir_map = {N: "N", E: "E", S: "S", W: "W"}
     path_str = "".join(dir_map[d] for d in path_dirs)
     lines.append(path_str)
-
-    # 6️⃣ Write to file
     with open(config.output_file, "w") as f:
-        f.write("\n".join(lines) + "\n")  # ensure final newline
+        f.write("\n".join(lines) + "\n")
 
 
-# ===== COLORS =====
 BLUE = "\033[34m"
 RED = "\033[31m"
 GREEN = "\033[32m"
 RESET = "\033[0m"
 YELLOW = "\033[33m"
 
-# ===== MAIN =====
+
 def main() -> None:
     if len(sys.argv) != 2:
         print("Usage: python3 a_maze_ing.py config.txt")
@@ -150,7 +136,7 @@ def main() -> None:
                         show_42=True,
                         path_cells=visible
                     )
-                    # time.sleep(0.05)
+                    time.sleep(0.05)
                 path_cells = set(cells)
             elif choice == "p":
                 PlayMode.play(

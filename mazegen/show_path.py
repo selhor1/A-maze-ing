@@ -1,7 +1,6 @@
 from typing import Dict, List, Tuple
 
 
-# Directions for your maze
 N, E, S, W = 1, 2, 4, 8
 DIRECTIONS = {N: (0, -1), E: (1, 0), S: (0, 1), W: (-1, 0)}
 OPPOSITE = {N: S, S: N, E: W, W: E}
@@ -27,7 +26,7 @@ class Solver:
                 break
             cell = grid[y][x]
             for direction, (dx, dy) in DIRECTIONS.items():
-                if cell & direction:  # wall exists
+                if cell & direction:
                     continue
                 nx, ny = x + dx, y + dy
                 if 0 <= nx < len(grid[0]) and 0 <= ny < len(grid):

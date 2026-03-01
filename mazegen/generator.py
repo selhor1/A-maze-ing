@@ -8,7 +8,6 @@ DY = {E: 0, W: 0, N: -1, S: 1}
 
 class MazeGenerator:
     """Generate perfect or imperfect maze using DFS with optional animation."""
-
     def __init__(
         self,
         width: int,
