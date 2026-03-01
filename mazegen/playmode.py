@@ -84,7 +84,7 @@ class PlayMode:
             # Check if reached exit
             if (px, py) == (goal_x, goal_y):
                 print("\033[92mCongrats! You reached the exit!\033[0m")
-                os.system("aplay music/win.wav &")  # play win sound in background
+                os.system("aplay win.wav &")  # play win sound in background
                 time.sleep(1.5)
                 break
             
@@ -115,7 +115,7 @@ class PlayMode:
                     time.sleep(0.5)
                 if not hearts:
                     print("\033[91mGame Over! You ran out of hearts.\033[0m")
-                    os.system("aplay music/lose.mp3 &")  # play lose sound in background
+                    os.system("aplay lose.wav &")  # play lose sound in background
                     break
 
             if moved:
