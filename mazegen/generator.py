@@ -1,13 +1,9 @@
 import random
 from typing import List, Tuple, Set, Optional
 
-# -----------------------------
-# Direction bitmasks
 N, E, S, W = 1, 2, 4, 8
 DX = {E: 1, W: -1, N: 0, S: 0}
 DY = {E: 0, W: 0, N: -1, S: 1}
-OPPOSITE = {N: S, S: N, E: W, W: E}
-# -----------------------------
 
 
 class MazeGenerator:
@@ -27,7 +23,6 @@ class MazeGenerator:
         self.exit = exit
         self.rng = random.Random(seed)
 
-        # Grid: each cell stores wall bitmask
         self.grid: List[List[int]] = [
             [N | E | S | W for _ in range(width)]
             for _ in range(height)
@@ -37,15 +32,10 @@ class MazeGenerator:
             for _ in range(height)
         ]
 
-        # Blocked cells for "42" pattern
         self.blocked = self._create_42_pattern()
 
-    # -----------------------------
     def _create_42_pattern(self) -> Set[Tuple[int, int]]:
         """Return coordinates for 42 pattern."""
-        if self.width < 7 or self.height < 5:
-            return set()
-
         start_x = (self.width - 7) // 2
         start_y = (self.height - 5) // 2
         pattern = [
@@ -64,7 +54,6 @@ class MazeGenerator:
 
         return blocked
 
-    # -----------------------------
     def remove_wall(self, a: Tuple[int, int], b: Tuple[int, int]) -> None:
         """Remove wall between two adjacent cells."""
         x1, y1 = a
@@ -83,32 +72,6 @@ class MazeGenerator:
             self.grid[y1][x1] &= ~N
             self.grid[y2][x2] &= ~S
 
-    # -----------------------------
-    def _dfs_iterative(self, start_x: int, start_y: int) -> None:
-        """Iterative DFS to generate maze."""
-        stack = [(start_x, start_y)]
-        self.visited[start_y][start_x] = True
-
-        while stack:
-            cx, cy = stack[-1]
-            dirs = [N, E, S, W]
-            self.rng.shuffle(dirs)
-            moved = False
-
-            for d in dirs:
-                nx, ny = cx + DX[d], cy + DY[d]
-                if 0 <= nx < self.width and 0 <= ny < self.height:
-                    if not self.visited[ny][nx] and (nx, ny) not in self.blocked:
-                        self.remove_wall((cx, cy), (nx, ny))
-                        self.visited[ny][nx] = True
-                        stack.append((nx, ny))
-                        moved = True
-                        break
-
-            if not moved:
-                stack.pop()
-
-    # -----------------------------
     def _break_random_walls(self, extra_paths: int = None) -> None:
         """
         Break random walls to create extra paths, but:
@@ -156,39 +119,13 @@ class MazeGenerator:
                         break
             attempts += 1
 
-    # -----------------------------
-    def generate(self, perfect: bool = True) -> None:
-        """Generate maze without animation."""
-
-        # Ensure entry/exit not blocked
-        for cell in [self.entry, self.exit]:
-            self.blocked.discard(cell)
-
-        # Block 42 cells
-        for x, y in self.blocked:
-            self.visited[y][x] = True
-            self.grid[y][x] = N | E | S | W
-
-        # Generate perfect maze
-        sx, sy = self.entry
-        self._dfs_iterative(sx, sy)
-
-        # If imperfect → break random walls
-        if not perfect:
-            self._break_random_walls()
-
-    # -----------------------------
     def generate_animated(self, perfect: bool = True):
         """Generate maze with animation, yields grid each step."""
 
         visited = set()
-        blocked = self.blocked.copy()
-        blocked.discard(self.entry)
-        blocked.discard(self.exit)
-
+        blocked = self.blocked
         stack = [self.entry]
         visited.add(self.entry)
-
         while stack:
             cx, cy = stack[-1]
 
@@ -213,7 +150,6 @@ class MazeGenerator:
             self._break_random_walls()
             yield [row[:] for row in self.grid], None
 
-    # -----------------------------
     def get_cells(self) -> List[List[int]]:
         """Return a copy of the grid, keeping blocked cells fully walled."""
         grid_copy = [row[:] for row in self.grid]

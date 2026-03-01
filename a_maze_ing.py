@@ -1,10 +1,7 @@
 import sys
 import os
 import time
-import tty
-import termios
 import random
-from animations import show_intro
 from config import load_config, ConfigError
 from mazegen import MazeGenerator
 from mazegen.show_path import Solver
@@ -12,28 +9,15 @@ from mazegen.playmode import PlayMode
 from renderer import render_ascii, PALETTES
 from mazegen.generator import N, E, S, W
 
+
 # ===== TERMINAL HELPERS =====
 def clear_screen() -> None:
     os.system("clear")
 
-def get_key() -> str:
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(fd)
-        ch1 = sys.stdin.read(1)
-        if ch1 == "\x1b":
-            sys.stdin.read(1)
-            ch3 = sys.stdin.read(1)
-            return ch3
-        return ch1
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 # ===== GENERATE & RENDER =====
-def generate_and_render(config, pal_idx, animate=True):
-    seed_to_use = config.seed if config.seed is not None else random.randint(0, 999999)
-    
+def generate_and_render(config, pal_idx):
+    seed_to_use = config.seed if config.seed is not None else random.randint(0, 999999) 
     generator = MazeGenerator(
         width=config.width,
         height=config.height,
@@ -41,28 +25,24 @@ def generate_and_render(config, pal_idx, animate=True):
         exit=config.exit,
         seed=seed_to_use,
     )
-
     pal = PALETTES[pal_idx]
     theme = {"walls": pal["walls"], "inner": pal["inner"],
              "pattern": pal["pattern"]}
 
-    if animate:
-        for grid, current_cell in generator.generate_animated(perfect=config.perfect):
-            clear_screen()
-            render_ascii(
-                grid,
-                config.entry,
-                config.exit,
-                theme,
-                show_42=True,
-                current_cell=current_cell
-            )
-            time.sleep(0.03)
-    else:
-        generator.generate(perfect=config.perfect)
+    for grid, current_cell in generator.generate_animated(perfect=config.perfect):
+        clear_screen()
+        render_ascii(
+            grid,
+            config.entry,
+            config.exit,
+            theme,
+            show_42=True,
+            current_cell=current_cell
+        )
+        time.sleep(0.03)
 
     grid = generator.get_cells()
-    return generator, grid
+    return generator, grid, seed_to_use
 
 # ===== SAVE MAZE TO FILE IN SUBJECT FORMAT =====
 def save_maze_to_file_hex(grid, config):
@@ -97,7 +77,6 @@ def save_maze_to_file_hex(grid, config):
     with open(config.output_file, "w") as f:
         f.write("\n".join(lines) + "\n")  # ensure final newline
 
-    print(f"\033[32mMaze saved to {config.output_file} in subject format\033[0m")
 
 # ===== COLORS =====
 BLUE = "\033[34m"
@@ -112,10 +91,11 @@ def main() -> None:
         print("Usage: python3 a_maze_ing.py config.txt")
         sys.exit(1)
     try:
+        from animations import show_intro
         config = load_config(sys.argv[1])
         pal_idx = 0
         show_intro()
-        generator, grid = generate_and_render(config, pal_idx, animate=True)
+        generator, grid, seed = generate_and_render(config, pal_idx)
         save_maze_to_file_hex(grid, config)
 
         path_cells = None
@@ -127,25 +107,23 @@ def main() -> None:
         }
 
         while True:
-            print(f"\n{YELLOW}Created by masselgu & selhor\nTeam: Wlad Lkhayriya")
-            print(f"\n\n\n\n {GREEN}Theme: {PALETTES[pal_idx]['name']}")
             print(f"{BLUE} ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄"
-                  f"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄{RESET}")
+                  f"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄{RESET}")
             print(f"{BLUE} ▌            ▌            ▌           ▌          "
-                  f"  ▌           ▌{RESET}")
+                  f"  ▌           ▌           ▌{RESET}")
             print(f"{BLUE} ▌{RESET} [R]{RED} Regen{RESET}  {BLUE}▌{RESET} [S]"
                   f"{RED} Solve{RESET}  {BLUE}▌{RESET} [P]{RED} Play{RESET}  "
-                  f"{BLUE}▌{RESET} [C]{RED} Theme{RESET}  {BLUE}▌{RESET} [Q]"
-                  f"{RED} Quit{RESET}  {BLUE}▌{RESET}")
+                  f"{BLUE}▌{RESET} [C]{RED} Theme{RESET}  {BLUE}▌{RESET} [I]"
+                  f"{RED} Info{RESET}  {BLUE}▌{RESET} [Q] {RED}Quit{RESET}")
             print(f"{BLUE} ▌            ▌            ▌           ▌          "
-                  f"  ▌           ▌{RESET}")
+                  f"  ▌           ▌           ▌{RESET}")
             print(f"{BLUE} ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀"
-                  f"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀{RESET}")
+                  f"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀{RESET}")
             choice = input("> ").strip().lower()
             if choice == "q":
                 break
             elif choice == "r":
-                generator, grid = generate_and_render(config, pal_idx)
+                generator, grid, seed= generate_and_render(config, pal_idx)
                 path_cells = None
             elif choice == "s":
                 if path_cells:
@@ -192,11 +170,27 @@ def main() -> None:
                 }
                 render_ascii(grid, config.entry, config.exit, theme,
                              show_42=True)
+            elif choice == "i":
+                print(f"\n{RED} ╔============╗ {RESET}")
+                print(" ║  Info Maze ║")
+                print(f"{RED} ╚============╝ {RESET}")
+                print(f"{YELLOW}Theme: {PALETTES[pal_idx]['name']}")
+                print(f"Parametre Configuration:{RESET}\n  - entry: "
+                      f"{config.entry}   - exit: {config.exit}\n  - width: "
+                      f"{config.width}       - height: {config.height}\n"
+                      f"  - Output_file: {config.output_file}")
+                if config.perfect:
+                    print("  - Perfect maze")
+                else:
+                    print("  - Non perfect maze")
+                print(f"{YELLOW}Seed maze: {seed} {RESET}\n\n")
+
             else:
                 continue
     except ConfigError as error:
         print(f"Configuration error: {error}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

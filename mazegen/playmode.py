@@ -27,7 +27,7 @@ class PlayMode:
         Start interactive play mode.
         Move with WASD, lose hearts on invalid moves.
         """
-        os.system("cls" if os.name == "nt" else "clear")
+        os.system("clear")
         intro_text = "\033[1;31mHurry Up! Find the Exit!\033[0m"
         for c in intro_text:
             print(c, end="", flush=True)
