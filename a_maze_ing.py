@@ -159,10 +159,17 @@ def main() -> None:
                 render_ascii(grid, config.entry, config.exit, theme,
                              show_42=True)
             elif choice == "i":
-                print(f"\n{RED} ╔============╗ {RESET}")
-                print(" ║  Info Maze ║")
-                print(f"{RED} ╚============╝ {RESET}")
-                print(f"{YELLOW}Theme: {PALETTES[pal_idx]['name']}")
+                text = [
+                    "░▀█▀░█▀█░█▀▀░█▀█",
+                    "░░█░░█░█░█▀▀░█░█",
+                    "░▀▀▀░▀░▀░▀░░░▀▀▀",
+                ]
+                print()
+                for line in text:
+                    print(f"{BLUE}{line}{RESET}")
+                    time.sleep(0.1)
+                time.sleep(0.5)
+                print(f"\n\n{YELLOW}Theme: {PALETTES[pal_idx]['name']}")
                 print(f"Parametre Configuration:{RESET}\n  - entry: "
                       f"{config.entry}   - exit: {config.exit}\n  - width: "
                       f"{config.width}       - height: {config.height}\n"
