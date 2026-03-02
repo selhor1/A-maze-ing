@@ -95,18 +95,20 @@ def main() -> None:
         }
 
         while True:
-            print(f"{BLUE} ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄"
-                  f"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄{RESET}")
-            print(f"{BLUE} ▌            ▌            ▌           ▌          "
-                  f"  ▌           ▌           ▌{RESET}")
+            print(f"{BLUE} ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄{RESET}")
+            print(f"{BLUE} ▌            ▌            ▌          ▌{RESET}")
             print(f"{BLUE} ▌{RESET} [R]{RED} Regen{RESET}  {BLUE}▌{RESET} [S]"
-                  f"{RED} Solve{RESET}  {BLUE}▌{RESET} [P]{RED} Play{RESET}  "
-                  f"{BLUE}▌{RESET} [C]{RED} Theme{RESET}  {BLUE}▌{RESET} [I]"
-                  f"{RED} Info{RESET}  {BLUE}▌{RESET} [Q] {RED}Quit{RESET}")
-            print(f"{BLUE} ▌            ▌            ▌           ▌          "
-                  f"  ▌           ▌           ▌{RESET}")
-            print(f"{BLUE} ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀"
-                  f"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀{RESET}")
+                  f"{RED} Solve{RESET}  {BLUE}▌{RESET} [P]{RED} Play{RESET} "
+                  f"{BLUE}▌{RESET}")
+            print(f"{BLUE} ▌            ▌            ▌          ▌{RESET}")
+            print(f"{BLUE} ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀")
+            print(f"{BLUE} ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄{RESET}")
+            print(f"{BLUE} ▌            ▌            ▌          ▌{RESET}")
+            print(f"{BLUE} ▌{RESET} [C]{RED} Theme {RESET} {BLUE}▌{RESET} [I]"
+                  f"{RED} Info  {RESET} {BLUE}▌{RESET} [Q] {RED}Quit{RESET}"
+                  f" {BLUE}▌{RESET}")
+            print(f"{BLUE} ▌            ▌            ▌          ▌{RESET}")
+            print(f"{BLUE} ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀{RESET}")
             choice = input("> ").strip().lower()
             if choice == "q":
                 break
