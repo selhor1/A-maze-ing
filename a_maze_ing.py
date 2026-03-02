@@ -15,19 +15,20 @@ def clear_screen() -> None:
 
 
 def generate_and_render(config, pal_idx):
-    seed_to_use = config.seed if config.seed is not None else random.randint(0, 999999) 
+    s = config.seed if config.seed is not None else random.randint(0, 999999)
     generator = MazeGenerator(
         width=config.width,
         height=config.height,
         entry=config.entry,
         exit=config.exit,
-        seed=seed_to_use,
+        seed=s,
     )
     pal = PALETTES[pal_idx]
     theme = {"walls": pal["walls"], "inner": pal["inner"],
              "pattern": pal["pattern"]}
 
-    for grid, current_cell in generator.generate_animated(perfect=config.perfect):
+    for grid, current_cell in generator.generate_animated(
+         perfect=config.perfect):
         clear_screen()
         render_ascii(
             grid,
@@ -40,7 +41,8 @@ def generate_and_render(config, pal_idx):
         time.sleep(0.03)
 
     grid = generator.get_cells()
-    return generator, grid, seed_to_use
+    return generator, grid, s
+
 
 def save_maze_to_file_hex(grid, config):
     """Save maze to file using hex digits, then entry, exit, shortest path."""
@@ -109,7 +111,7 @@ def main() -> None:
             if choice == "q":
                 break
             elif choice == "r":
-                generator, grid, seed= generate_and_render(config, pal_idx)
+                generator, grid, seed = generate_and_render(config, pal_idx)
                 path_cells = None
             elif choice == "s":
                 if path_cells:

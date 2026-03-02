@@ -8,6 +8,7 @@ DY = {E: 0, W: 0, N: -1, S: 1}
 
 class MazeGenerator:
     """Generate perfect or imperfect maze using DFS with optional animation."""
+
     def __init__(
         self,
         width: int,
@@ -44,13 +45,11 @@ class MazeGenerator:
             "0010100",
             "0010111",
         ]
-
         blocked: Set[Tuple[int, int]] = set()
         for dy, row in enumerate(pattern):
             for dx, char in enumerate(row):
                 if char == "1":
                     blocked.add((start_x + dx, start_y + dy))
-
         return blocked
 
     def remove_wall(self, a: Tuple[int, int], b: Tuple[int, int]) -> None:
@@ -94,23 +93,21 @@ class MazeGenerator:
                 nx, ny = x + DX[d], y + DY[d]
 
                 if 0 <= nx < self.width and 0 <= ny < self.height:
-                    # Skip blocked or entry/exit
                     if (x, y) in self.blocked or (nx, ny) in self.blocked:
                         continue
-                    if (x, y) in [self.entry, self.exit] or (nx, ny) in [self.entry, self.exit]:
+                    if ((x, y) in [self.entry, self.exit] or (nx, ny) in
+                       [self.entry, self.exit]):
                         continue
-                    # Only break if wall exists
                     if self.grid[y][x] & d:
-                        # Check if breaking creates a 3x3 open area
                         open_count = 0
                         for dx in [-1, 0, 1]:
                             for dy in [-1, 0, 1]:
                                 tx, ty = nx + dx, ny + dy
-                                if 0 <= tx < self.width and 0 <= ty < self.height:
+                                if (0 <= tx < self.width
+                                   and 0 <= ty < self.height):
                                     if self.grid[ty][tx] != (N | E | S | W):
                                         open_count += 1
                         if open_count > 4:
-                            # Too many adjacent open cells → skip
                             continue
 
                         self.remove_wall((x, y), (nx, ny))
@@ -120,21 +117,18 @@ class MazeGenerator:
 
     def generate_animated(self, perfect: bool = True):
         """Generate maze with animation, yields grid each step."""
-
         visited = set()
         blocked = self.blocked
         stack = [self.entry]
         visited.add(self.entry)
         while stack:
             cx, cy = stack[-1]
-
             neighbors = []
             for d in [N, E, S, W]:
                 nx, ny = cx + DX[d], cy + DY[d]
                 if 0 <= nx < self.width and 0 <= ny < self.height:
                     if (nx, ny) not in visited and (nx, ny) not in blocked:
                         neighbors.append((nx, ny))
-
             if neighbors:
                 nx, ny = self.rng.choice(neighbors)
                 self.remove_wall((cx, cy), (nx, ny))
@@ -142,7 +136,6 @@ class MazeGenerator:
                 stack.append((nx, ny))
             else:
                 stack.pop()
-
             yield [row[:] for row in self.grid], (cx, cy)
 
         if not perfect:

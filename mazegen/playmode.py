@@ -1,12 +1,15 @@
 import os
 import time
 from typing import TYPE_CHECKING, Tuple, Dict
-
 from mazegen.generator import E, N, S, W
 from renderer import render_ascii, get_42_pattern_coords
-
 if TYPE_CHECKING:
     from mazegen.generator import MazeGenerator
+
+
+BLUE = "\033[34m"
+YELLOW = "\033[33m"
+RESET = "\033[0m"
 
 
 class PlayMode:
@@ -28,7 +31,24 @@ class PlayMode:
         Move with WASD, lose hearts on invalid moves.
         """
         os.system("clear")
-
+        big_text = [
+            "███╗   ███╗ █████╗ ███████╗███████╗",
+            "████╗ ████║██╔══██╗╚══███╔╝██╔════╝",
+            "██╔████╔██║███████║  ███╔╝ █████╗  ",
+            "██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝  ",
+            "██║ ╚═╝ ██║██║  ██║███████╗███████╗",
+            "╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝",
+        ]
+        for i, line in enumerate(big_text, start=5):
+            print(f"\033[{i};5H{BLUE}{line}{RESET}")
+            time.sleep(0.1)
+        time.sleep(0.5)
+        print("\n\n")
+        for i in range(30):
+            bar = f"[{'#' * i}{' ' * (30 - i)}]"
+            print(f"\r\033[30mLoading Game {bar}{RESET}", end="", flush=True)
+            time.sleep(0.04)
+        print("\n")
         px, py = entry
         goal_x, goal_y = exit_
         hearts = ["\033[1;31m\u2665\033[0m"] * 3
@@ -37,18 +57,17 @@ class PlayMode:
             os.system("clear")
             maze_cells = maze.get_cells()
             p42 = get_42_pattern_coords(maze.width, maze.height)
-            visited_temp = [[None for _ in range(maze.width)] for _ in range(maze.height)]
+            visited_temp = [[None for _ in range(maze.width)]
+                            for _ in range(maze.height)]
             for x, y in p42:
-                visited_temp[y][x] = "•"        
-            visited_temp[py][px] = "@"        
+                visited_temp[y][x] = "•"
+            visited_temp[py][px] = "@"
             hearts_display = " ".join(hearts)
-            status_bar = f"hearts: [ {hearts_display} ] -- Move with (W/A/S/D -- leave with 'ex' "
-            border = "═" * 59
-        
-            print("Guide the mouse 🐁 to the end. Can you escape to the cheese 🧀?")     
-            print(f"     ╔{border}╗")
-            print(f"     ║{status_bar}║")
-            print(f"     ╚{border}╝")
+            status_bar = (f"hearts: [ {hearts_display} ] ║ Move with (W/A/S/D "
+                          "║ leave with 'ex'\n")
+            print(f"{YELLOW}Guide the mouse 🐁 to the end. Can you escape to"
+                  f" the cheese 🧀?{RESET}")
+            print(f"\n{status_bar}")
             render_ascii(
                 maze_cells,
                 entry=(px, py),
@@ -56,15 +75,14 @@ class PlayMode:
                 origin_theme=theme,
                 show_42=True,
                 visited=visited_temp
-            )        
-            current_cell = maze_cells[py][px]        
+            )
+            current_cell = maze_cells[py][px]
             if (px, py) == (goal_x, goal_y):
                 print("\033[92mCongrats! You reached the exit!\033[0m")
-                os.system("aplay win.wav &")
+                os.system(r"aplay music/win.wav &")
                 time.sleep(1.5)
-                break            
+                break
             move = input("> ").strip().lower()
-        
             if move == "w" and not (current_cell & N):
                 py -= 1
             elif move == "s" and not (current_cell & S):
@@ -83,6 +101,6 @@ class PlayMode:
                     time.sleep(0.5)
                 if not hearts:
                     print("\033[91mGame Over! You ran out of hearts.\033[0m")
-                    os.system("aplay lose.wav &")
+                    os.system(r"aplay music/lose.wav &")
+                    time.sleep(1.5)
                     break
-

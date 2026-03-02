@@ -30,10 +30,6 @@ class Config:
         self.seed = seed
 
 
-# ===============================
-# Helpers
-# ===============================
-
 def parse_coords(value: str) -> Tuple[int, int]:
     """Parse coordinates x,y."""
     parts = value.split(",")
@@ -57,20 +53,17 @@ def parse_bool(value: str, key_name: str) -> bool:
 def validate_config(config: Config) -> None:
     """Validate configuration values."""
 
-    # Required fields
     required = ["width", "height", "entry", "exit", "output_file", "perfect"]
     for name in required:
         if getattr(config, name) is None:
             raise ConfigError(f"Missing required parameter: {name}")
 
-    # Size validation
     if config.width <= 0 or config.height <= 0:
         raise ConfigError("Width and height must be positive")
 
     if config.width < 9 or config.height < 7:
         raise ConfigError("Maze too small (minimum 9x7)")
 
-    # Coordinates inside bounds
     ex, ey = config.entry
     ox, oy = config.exit
 
@@ -80,11 +73,9 @@ def validate_config(config: Config) -> None:
     if not (0 <= ox < config.width and 0 <= oy < config.height):
         raise ConfigError(f"Exit coordinates out of bounds: {config.exit}")
 
-    # Entry != Exit
     if config.entry == config.exit:
         raise ConfigError("Entry and exit must be different")
 
-    # Output file validation
     if not config.output_file or config.output_file.strip() == "":
         raise ConfigError("OUTPUT_FILE cannot be empty")
     if config.output_file in (".", "..", "./", "../", "/"):
@@ -94,7 +85,6 @@ def validate_config(config: Config) -> None:
     if not config.output_file.endswith(".txt"):
         print("\033[33mWarning: output file should be .txt\033[0m")
 
-    # 42 pattern checks
     if config.width >= 9 and config.height >= 7:
         p42 = get_42_pattern_coords(config.width, config.height)
         if config.entry in p42:
@@ -102,10 +92,6 @@ def validate_config(config: Config) -> None:
         if config.exit in p42:
             raise ConfigError("Exit cannot be inside 42 pattern")
 
-
-# ===============================
-# Loader
-# ===============================
 
 def load_config(filename: str) -> Config:
     """Load configuration file safely."""
@@ -138,7 +124,6 @@ def load_config(filename: str) -> Config:
         raise ConfigError(f"Cannot access config file '{filename}' "
                           "(permission denied)")
 
-    # Parse numeric fields
     try:
         width = int(config_data["WIDTH"])
     except KeyError:
@@ -168,13 +153,11 @@ def load_config(filename: str) -> Config:
     except KeyError:
         raise ConfigError("Missing OUTPUT_FILE")
 
-    # Booleans
     try:
         perfect = parse_bool(config_data["PERFECT"], "PERFECT")
     except KeyError:
         raise ConfigError("Missing PERFECT")
 
-    # Seed
     seed: Optional[int] = None
     if "SEED" in config_data and config_data["SEED"].strip() != "":
         try:
