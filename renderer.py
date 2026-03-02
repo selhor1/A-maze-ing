@@ -22,8 +22,6 @@ N, E, S, W = 1, 2, 4, 8
 
 def get_42_pattern_coords(width: int, height: int) -> Set[Tuple[int, int]]:
     """Exact same 7x5 coordinates logic as generator.py."""
-    if width < 7 or height < 5:
-        return set()
     start_x, start_y = (width - 7) // 2, (height - 5) // 2
     pattern = ["1000111", "1000001", "1110111", "0010100", "0010111"]
     blocked = set()

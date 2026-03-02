@@ -22,7 +22,6 @@ class MazeGenerator:
         self.entry = entry
         self.exit = exit
         self.rng = random.Random(seed)
-
         self.grid: List[List[int]] = [
             [N | E | S | W for _ in range(width)]
             for _ in range(height)
@@ -70,15 +69,13 @@ class MazeGenerator:
             self.grid[y1][x1] &= ~N
             self.grid[y2][x2] &= ~S
 
-    def _break_random_walls(self, extra_paths: int = None) -> None:
+    def _break_random_walls(self) -> None:
         """
         Break random walls to create extra paths, but:
         - corridors stay max 2 cells wide/height
         - avoids merging too many open cells
         """
-        if extra_paths is None:
-            extra_paths = int((self.width * self.height) / 10)
-
+        extra_paths = int((self.width * self.height) / 10)
         added = 0
         attempts = 0
         max_attempts = extra_paths * 20
