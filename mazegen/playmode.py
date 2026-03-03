@@ -1,11 +1,12 @@
 import os
 import time
-import playsound
+import pygame
 from typing import TYPE_CHECKING, Tuple, Dict
 from mazegen.generator import E, N, S, W
 from renderer import render_ascii
 if TYPE_CHECKING:
     from mazegen.generator import MazeGenerator
+pygame.mixer.init()
 
 
 BLUE = "\033[34m"
@@ -73,7 +74,8 @@ class PlayMode:
             current_cell = maze_cells[py][px]
             if (px, py) == (goal_x, goal_y):
                 print("\033[92mCongrats! You reached the exit!\033[0m")
-                playsound.playsound("music/win.wav", block=False)
+                pygame.mixer.music.load("music/win.wav")
+                pygame.mixer.music.play()
                 time.sleep(1.5)
                 break
             move = input("> ").strip().lower()
@@ -95,6 +97,7 @@ class PlayMode:
                     time.sleep(0.5)
                 if not hearts:
                     print("\033[91mGame Over! You ran out of hearts.\033[0m")
-                    playsound.playsound("music/lose.wav", block=False)
+                    pygame.mixer.music.load("music/lose.wav")
+                    pygame.mixer.music.play()
                     time.sleep(1.5)
                     break
