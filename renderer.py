@@ -38,7 +38,6 @@ def render_ascii(
     exit_: Tuple[int, int],
     origin_theme: Dict[str, str],
     show_42: bool = False,
-    visited: Optional[Set[Tuple[int, int]]] = None,
     path_cells: Optional[Set[Tuple[int, int]]] = None,
     current_cell: Optional[Tuple[int, int]] = None
 ) -> None:
