@@ -88,6 +88,12 @@ def validate_config(config: Config) -> None:
         raise ConfigError("Invalid output filename")
     if not config.output_file.endswith(".txt"):
         print("\033[33mWarning: output file should be .txt\033[0m")
+    try:
+        with open(config.output_file, "a"):
+            pass
+    except PermissionError:
+        raise ConfigError("No permission to write to "
+                          f"file: {config.output_file}")
 
     if config.width >= 9 and config.height >= 7:
         p42 = get_42_pattern_coords(config.width, config.height)

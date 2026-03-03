@@ -21,7 +21,7 @@ class MazeGenerator:
         self.height = height
         self.entry = entry
         self.exit = exit
-        self.rng = random.Random(seed)
+        self.rng = random.Random(str(seed))
         self.grid: List[List[int]] = [
             [N | E | S | W for _ in range(width)]
             for _ in range(height)
