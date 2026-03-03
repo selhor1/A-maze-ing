@@ -42,6 +42,10 @@ def parse_coords(value: str) -> Tuple[int, int]:
 
 
 def parse_bool(value: str, key_name: str) -> bool:
+    """
+    Convert a string value to a boolean.
+    Accepts common true/false representations and raises an error if invalid.
+    """
     val = value.lower()
     if val == "true":
         return True

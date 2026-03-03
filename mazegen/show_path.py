@@ -57,6 +57,10 @@ class Solver:
         entry: Tuple[int, int],
         path: List[int],
     ) -> List[Tuple[int, int]]:
+        """Convert a direction path (N, E, S, W) into the list of visited cells
+        starting from the entry position.
+        Returns all coordinates including start and end.
+        """
         x, y = entry
         cells = [(x, y)]
         for d in path:

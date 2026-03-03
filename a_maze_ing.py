@@ -11,6 +11,9 @@ from mazegen.generator import N, E, S, W
 
 
 def clear_screen() -> None:
+    """
+    Clear the terminal screen.
+    """
     os.system("clear")
 
 
@@ -75,6 +78,11 @@ YELLOW = "\033[33m"
 
 
 def main() -> None:
+    """
+    Main entry point of the program.
+    Loads configuration, generates the maze, displays it,
+    and provides a menu for regenerating, solving, or playing the maze.
+    """
     if len(sys.argv) != 2:
         print("Usage: python3 a_maze_ing.py config.txt")
         sys.exit(1)
