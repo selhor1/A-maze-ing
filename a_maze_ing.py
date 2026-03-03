@@ -143,6 +143,7 @@ def main() -> None:
                 break
             elif choice == "r":
                 generator, grid, seed = generate_and_render(config, pal_idx)
+                save_maze_to_file_hex(grid, config)
                 path_cells = None
             elif choice == "s":
                 if path_cells:
