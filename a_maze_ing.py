@@ -2,12 +2,13 @@ import sys
 import os
 import time
 import random
-from config import load_config, ConfigError
+from config import load_config, ConfigError, Config
 from mazegen import MazeGenerator
 from mazegen.show_path import Solver
 from mazegen.playmode import PlayMode
 from renderer import render_ascii, PALETTES
 from mazegen.generator import N, E, S, W
+from typing import List, Tuple
 
 
 def clear_screen() -> None:
@@ -17,7 +18,24 @@ def clear_screen() -> None:
     os.system("clear")
 
 
-def generate_and_render(config, pal_idx):
+def generate_and_render(
+    config: Config,
+    pal_idx: int
+) -> Tuple[MazeGenerator, List[List[int]], int]:
+    """
+    Generate a maze and render it step-by-step with animation.
+
+    Parameters:
+    - config: Config object containing maze settings
+              (width, height, entry, exit, seed, perfect).
+    - pal_idx: Index of the selected color palette.
+
+    Returns:
+    - Tuple containing:
+        - MazeGenerator instance used to generate the maze.
+        - Final grid as a 2D list of integers.
+        - The seed value used for generation.
+    """
     s = config.seed if config.seed is not None else random.randint(0, 999999)
     generator = MazeGenerator(
         width=config.width,
@@ -47,7 +65,10 @@ def generate_and_render(config, pal_idx):
     return generator, grid, s
 
 
-def save_maze_to_file_hex(grid, config):
+def save_maze_to_file_hex(
+    grid: List[List[int]],
+    config: Config
+) -> None:
     """Save maze to file using hex digits, then entry, exit, shortest path."""
     lines = []
 

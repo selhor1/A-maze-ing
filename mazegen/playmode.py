@@ -1,9 +1,8 @@
 import os
-from typing import Optional
 import time
 from typing import TYPE_CHECKING, Tuple, Dict
 from mazegen.generator import E, N, S, W
-from renderer import render_ascii, get_42_pattern_coords
+from renderer import render_ascii
 if TYPE_CHECKING:
     from mazegen.generator import MazeGenerator
 
@@ -57,13 +56,6 @@ class PlayMode:
         while True:
             os.system("clear")
             maze_cells = maze.get_cells()
-            p42 = get_42_pattern_coords(maze.width, maze.height)
-            visited_temp: list[list[Optional[str]]] = [
-                [None for _ in range(maze.width)] for _ in range(maze.height)
-            ]
-            for x, y in p42:
-                visited_temp[y][x] = "•"
-            visited_temp[py][px] = "@"
             hearts_display = " ".join(hearts)
             status_bar = (f"hearts: [ {hearts_display} ] ║ Move with (W/A/S/D)"
                           " ║ leave with 'ex'\n")
@@ -76,7 +68,6 @@ class PlayMode:
                 exit_=exit_,
                 origin_theme=theme,
                 show_42=True,
-                visited=visited_temp
             )
             current_cell = maze_cells[py][px]
             if (px, py) == (goal_x, goal_y):

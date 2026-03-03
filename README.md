@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by selhor.*
+*This project has been created as part of the 42 curriculum by selhor, masselgu.*
 
 # 🧩 A-Maze-ing — This is the way
 
@@ -38,7 +38,7 @@ This project explores:
 
 ---
 
-## 🛠 Installation
+## 🛠 Instructions
 
 ### 1️⃣ Install dependencies
 
@@ -47,259 +47,264 @@ make install
 ```
 
 or manually:
-
+``` bash
 pip3 install -r requirements.txt
+```
 ▶️ Run the program
+``` bash
 make run
+```
 
 or manually:
-
+``` bash
 python3 a_maze_ing.py config.txt
+```
 🐞 Debug Mode
+``` bash
 make debug
-
+```
 Runs the program using Python's debugger (pdb).
 
 🧹 Clean Cache
+``` bash
 make clean
-
+```
 Removes:
 
-__pycache__
+- __pycache__
 
-.mypy_cache
+- .mypy_cache
 
 🧪 Lint & Type Checking
+``` bash
 make lint
-
+```
 Runs:
-
+``` bash
 flake8
-
+```
 mypy with strict typing options
 
 ⚙ Configuration File Format
 
-The configuration file contains one KEY=VALUE per line.
+- The configuration file contains one KEY=VALUE per line.
 
-Lines starting with # are ignored.
+- Lines starting with # are ignored.
 
 Mandatory keys:
-Key	Description	Example
-WIDTH	Maze width	WIDTH=20
-HEIGHT	Maze height	HEIGHT=15
-ENTRY	Entry coordinates (x,y)	ENTRY=0,0
-EXIT	Exit coordinates (x,y)	EXIT=19,14
-OUTPUT_FILE	Output filename	OUTPUT_FILE=maze.txt
-PERFECT	Perfect maze flag	PERFECT=True
+- Key	Description	Example
+- WIDTH	Maze width	WIDTH=20
+- HEIGHT	Maze height	HEIGHT=15
+- ENTRY	Entry coordinates (x,y)	ENTRY=0,0
+- EXIT	Exit coordinates (x,y)	EXIT=19,14
+- OUTPUT_FILE	Output filename	OUTPUT_FILE=maze.txt
+- PERFECT	Perfect maze flag	PERFECT=True
 Optional keys:
-Key	Description
-SEED	Random seed for reproducibility
-🧱 Maze Generation Algorithm
+- Key	Description
+- SEED	Random seed for reproducibility
+- 🧱 Maze Generation Algorithm
 
-The maze is generated using a randomized depth-first search (recursive backtracker) algorithm.
+### The maze is generated using a randomized depth-first search algorithm.
 
 Why this algorithm?
 
-Simple to implement
+- Simple to implement
 
-Efficient
+- Efficient
 
-Naturally produces perfect mazes
+- Naturally produces perfect mazes
 
-Easy to control with seed for reproducibility
+- Easy to control with seed for reproducibility
 
-Produces visually pleasing corridors
+- Produces visually pleasing corridors
 
 If PERFECT=True, the maze ensures:
 
-Exactly one unique path between entry and exit
+- Exactly one unique path between entry and exit
 
-Full connectivity
 
-No isolated cells
+## 🔢 Output File Format
 
-🔢 Output File Format
-
-Each cell is represented by a single hexadecimal digit.
+### Each cell is represented by a single hexadecimal digit.
 
 Each bit represents a closed wall:
 
 Bit	Direction
-0	North
-1	East
-2	South
-3	West
+- 0	North
+- 1	East
+- 2	South
+- 3	West
 
 Example:
 
-3 (0011) → North & East walls closed
+- 3 (0011) → North & East walls closed
 
-A (1010) → East & West walls closed
+- A (1010) → East & West walls closed
 
 File structure:
-
+``` bash
 <maze rows>
 
 <entry coordinates>
 <exit coordinates>
 <shortest path using N,E,S,W>
+```
 🖥 Visual Representation
 
-The maze is displayed in the terminal using ASCII rendering.
+- The maze is displayed in the terminal using ASCII rendering.
 
 The interface allows:
 
-[R] Regenerate maze
+- [R] Regenerate maze
 
-[S] Show/Hide shortest path
+- [S] Show/Hide shortest path
 
-[P] Play mode (WASD movement)
+- [P] Play mode (WASD movement)
 
-[C] Change theme
+- [C] Change theme
 
-[I] Info display
+- [I] Info display
 
-[Q] Quit
+- [Q] Quit
 
 The maze includes a visible "42" pattern made of fully closed cells.
 
-♻ Code Reusability
+## ♻ Code Reusability
 
 The maze generation logic is implemented as a reusable module:
 
 MazeGenerator class (inside mazegen package)
 
 It allows:
-
+``` bash
 from mazegen import MazeGenerator
 
 generator = MazeGenerator(width=20, height=15, entry=(0,0), exit=(19,14))
 generator.generate(perfect=True)
 grid = generator.get_cells()
-
+```
 You can:
 
-Set custom size
+- Set custom size
 
-Use a seed
+- Use a seed
 
-Access generated structure
+- Access generated structure
 
-Use built-in solver
+- Use built-in solver
 
 The reusable package can be built as:
 
-mazegen-1.0.0-py3-none-any.whl
-🧠 Shortest Path Algorithm
+- mazegen-1.0.0-py3-none-any.whl
+## 🧠 Shortest Path Algorithm
 
 Shortest path is computed using Breadth-First Search (BFS).
 
 Why BFS?
 
-Guarantees shortest path in unweighted grid
+- Guarantees shortest path in unweighted grid
 
-Simple
+- Simple
 
-Efficient for maze structure
+- Efficient for maze structure
 
-👥 Team & Project Management
+## 👥 Team & Project Management
 Roles
 
-Maze generation logic
+- Maze generation logic
 
-Rendering system
+- Rendering system
 
-Configuration parser
+- Configuration parser
 
-Solver implementation
+- Solver implementation
 
-Makefile & packaging
+- Makefile & packaging
 
-Testing & debugging
+- Testing & debugging
 
-Planning
+### Planning
 
 Initial plan:
 
-Implement generator
+- Implement generator
 
-Add config parser
+- Add config parser
 
-Add rendering
+- Add rendering
 
-Add solver
+- Add solver
 
-Add packaging
+- Add packaging
 
 Adjustments:
 
-Improved validation
+- Improved validation
 
-Refactored for reusability
+- Refactored for reusability
 
-Added play mode
+- Added play mode
 
-Improved error handling
+- Improved error handling
 
-Tools Used
+### Tools Used
 
-Python 3.10+
+- Python 3.10+
 
-flake8
+- flake8
 
-mypy
+- mypy
 
-pdb
+- pdb
 
-Makefile
+- Makefile
 
-Virtual environment
+- Virtual environment
 
-Git
+- Git
 
-🤖 AI Usage
+## 🤖 AI Usage
 
 AI was used for:
 
-Clarifying algorithm logic
+- Clarifying algorithm logic
 
-Debugging assistance
+- Debugging assistance
 
-Improving type hints
+- Improving type hints
 
-Understanding BFS deeply
+- Understanding BFS deeply
 
-Improving documentation structure
+- Improving documentation structure
 
-All generated content was reviewed, tested, and fully understood before integration.
+- All generated content was reviewed, tested, and fully understood before integration.
 
-📚 Resources
+## 📚 Resources
 
-Graph Theory (Spanning Trees)
+- Graph Theory (Spanning Trees)
 
-Breadth-First Search documentation
+- Breadth-First Search documentation
 
-Python official documentation
+- Python official documentation
 
-PEP 8 / flake8 documentation
+- PEP 8 / flake8 documentation
 
-mypy documentation
+- mypy documentation
 
-🏁 Conclusion
+## 🏁 Conclusion
 
 This project demonstrates:
 
-Algorithmic thinking
+- Algorithmic thinking
 
-Clean architecture
+- Clean architecture
 
-Reusable module design
+- Reusable module design
 
-File format design
+- File format design
 
-Interactive terminal rendering
+- Interactive terminal rendering
 
-Strong type-safe Python code
+- Strong type-safe Python code
 
-A-Maze-ing is not just a maze generator — it is a structured, reusable, and extensible system built with production-level discipline.
+### A-Maze-ing is not just a maze generator — it is a structured, reusable, and extensible system built with production-level discipline.

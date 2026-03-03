@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set, Dict
+from typing import List, Tuple, Set, Dict, Optional
 
 PALETTES: List[Dict[str, str]] = [
     {"name": "Classic/Bold", "walls": "38;5;160", "inner": "38;5;231",
@@ -33,15 +33,31 @@ def get_42_pattern_coords(width: int, height: int) -> Set[Tuple[int, int]]:
 
 
 def render_ascii(
-    grid,
-    entry,
-    exit_,
-    origin_theme,
-    show_42=False,
-    visited=None,
-    path_cells=None,
-    current_cell=None
+    grid: List[List[int]],
+    entry: Tuple[int, int],
+    exit_: Tuple[int, int],
+    origin_theme: Dict[str, str],
+    show_42: bool = False,
+    visited: Optional[Set[Tuple[int, int]]] = None,
+    path_cells: Optional[Set[Tuple[int, int]]] = None,
+    current_cell: Optional[Tuple[int, int]] = None
 ) -> None:
+    """
+    Render the maze in ASCII art with optional path highlighting.
+
+    Parameters:
+    - grid: 2D list of ints representing the maze cells and walls.
+    - entry: (x, y) coordinates of the maze entry.
+    - exit_: (x, y) coordinates of the maze exit.
+    - origin_theme: dict with color codes for walls, inner cells, pattern.
+    - show_42: whether to render the 42 pattern inside the maze.
+    - visited: optional set of visited cells (not used here, just placeholder).
+    - path_cells: optional set of cells forming a path to highlight.
+    - current_cell: optional current cell for animation purposes.
+
+    Returns:
+    - None
+    """
     height = len(grid)
     width = len(grid[0]) if height > 0 else 0
     p42 = get_42_pattern_coords(width, height) if show_42 else set()

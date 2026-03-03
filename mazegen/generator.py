@@ -1,5 +1,5 @@
 import random
-from typing import List, Tuple, Set, Optional
+from typing import List, Tuple, Set, Optional, Generator
 
 N, E, S, W = 1, 2, 4, 8
 DX = {E: 1, W: -1, N: 0, S: 0}
@@ -112,7 +112,14 @@ class MazeGenerator:
                         break
             attempts += 1
 
-    def generate_animated(self, perfect: bool = True):
+    def generate_animated(
+        self,
+        perfect: bool = True
+    ) -> Generator[
+        Tuple[List[List[int]], Optional[Tuple[int, int]]],
+        None,
+        None
+    ]:
         """Generate maze with animation, yields grid each step."""
         visited = set()
         blocked = self.blocked

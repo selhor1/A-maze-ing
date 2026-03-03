@@ -11,7 +11,6 @@ clean:
 	@find -name "__pycache__" -exec rm -rf {} +
 	@rm -rf .mypy_cache
 
-
 lint:
 	python3 -m flake8 .
 	python3 -m  mypy . \
